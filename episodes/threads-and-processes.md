@@ -180,7 +180,7 @@ beneficial under limited circumstances - namely, when the resource
 utilisation (or runtime) of a function is *measureably* larger than
 the overhead of creating a new process.
 
-![multithreading](fig/cluster_threading.png)
+![multiprocessing](fig/cluster_processes.png.png)
 
 The code for computing pi would then look like:
 
