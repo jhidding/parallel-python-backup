@@ -14,7 +14,49 @@ exercises: 30
 - Understand the difference between the python `threading` and `multiprocessing` library
 :::
 
-# Threading
+# A bit of computer architecture
+### The von Neumann architecture
+![Neumann](fig/von_neumann.png)
+
+- A processing unit with both an arithmetic logic unit and processor registers
+- A control unit that includes an instruction register and a program counter
+- Memory that stores data and instructions
+- External mass storage
+- Input and output mechanisms
+
+### Simple multi-core cpu architecture
+![multicore](fig/simple_multicore.png)
+
+
+
+# The Python Interpreter
+
+![interpreter](fig/Python_interpreter.png)
+
+- Python source code is compiled into bytecode, the internal representation of a Python program in the interpreter. 
+- The bytecode is also cached in .pyc and .pyo files so that executing the same file is faster the second time (recompilation from source to bytecode can be avoided). 
+- This “intermediate language” is said to run on a virtual machine that executes the machine code corresponding to each bytecode.
+
+
+# The Global Interpreter Lock
+
+The Global Interpreter Lock (GIL) is an infamous feature of the Python interpreter. In CPython, theGIL, is a mutex that protects access to Python objects, preventing multiple threads from executing Python bytecodes at once. The GIL prevents race conditions and ensures thread safety, making programming in Python safer, and prevents us from using multiple cores from a single Python instance.
+
+![GIL](fig/GIL.png)
+
+When we want to perform parallel computations, this becomes an obvious problem.
+There are roughly two classes of solutions to circumvent/lift the GIL:
+
+- Run multiple Python instances: `multiprocessing`
+- Have important code outside Python: OS operations, C++ extensions, cython, numba
+
+
+# Multithreading, Multiproccessing and Python
+![clusterthreadsprocess](fig/cluster_python.png)
+
+## Multithreading
+![multithreading](fig/cluster_threading.png)
+
 Another possibility for parallelization is to use the `threading` module.
 This module is built into Python. In this section, we'll use it to estimate pi
 once again.
@@ -39,22 +81,15 @@ t2.join()
 ```
 
 :::discussion
-## Discussion: where's the speed-up?
+### Discussion: where's the speed-up?
 While mileage may vary, parallelizing `calc_pi`, `calc_pi_numpy` and `calc_pi_numba` this way will
 not give the expected speed-up. `calc_pi_numba` should give *some* speed-up, but nowhere near the
 ideal scaling over the number of cores. This is because Python only allows one thread to access the
 interperter at any given time, a feature also known as the Global Interpreter Lock.
 :::
 
-## A few words about the Global Interpreter Lock
-The Global Interpreter Lock (GIL) is an infamous feature of the Python interpreter.
-It both guarantees inner thread sanity, making programming in Python safer, and prevents us from using multiple cores from
-a single Python instance.
-When we want to perform parallel computations, this becomes an obvious problem.
-There are roughly two classes of solutions to circumvent/lift the GIL:
 
-- Run multiple Python instances: `multiprocessing`
-- Have important code outside Python: OS operations, C++ extensions, cython, numba
+### The GIL in action
 
 The downside of running multiple Python instances is that we need to share program state between different processes.
 To this end, you need to serialize objects. Serialization entails converting a Python object into a stream of bytes,
@@ -93,11 +128,11 @@ down most Numba code.  There's even a decorator that has `nopython=True` by defa
 Now we can run the benchmark again, using `calc_pi_nogil` instead of `calc_pi`.
 
 :::challenge
-## Exercise: try threading on a Numpy function
+### Exercise: try threading on a Numpy function
 Many Numpy functions unlock the GIL. Try to sort two randomly generated arrays using `numpy.sort` in parallel.
 
 ::::solution
-## Solution
+### Solution
 ```python
 rnd1 = np.random.random(high)
 rnd2 = np.random.random(high)
@@ -118,10 +153,36 @@ t2.join()
 ::::
 :::
 
-# Multiprocessing
+## Multiprocessing
+
 Python also allows for using multiple processes for parallelisation
 via the `multiprocessing` module.  It implements an API that is
-superficially similar to threading:
+superficially similar to threading. For example some pseudo code comparison may look almost identical:
+#### Multithreading example
+```python
+t1 = Thread(target=np.sort, args=(rnd1, ))
+```
+#### Multiprocessing example
+```python
+p1 = Process(target=calc_pi, args=(n,))
+```
+
+However under the hood processes are very different from threads.  A
+new process is created by creating a fresh "copy" of the python
+interpreter, that includes all the resources associated to the parent.
+There are three different ways of doing this (*spawn*, *fork*, and
+*forkserver*), which depends on the platform.  We will use *spawn* as
+it is available on all platforms, you can read more about the others
+in the [Python
+documentation](https://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods).
+As creating a process is resource intensive, multiprocessing is
+beneficial under limited circumstances - namely, when the resource
+utilisation (or runtime) of a function is *measureably* larger than
+the overhead of creating a new process.
+
+![multithreading](fig/cluster_threading.png)
+
+The code for computing pi would then look like:
 
 ```python
 from multiprocessing import Process
@@ -140,19 +201,6 @@ if __name__ == '__main__':
     p1.join()
     p2.join()
 ```
-
-However under the hood processes are very different from threads.  A
-new process is created by creating a fresh "copy" of the python
-interpreter, that includes all the resources associated to the parent.
-There are three different ways of doing this (*spawn*, *fork*, and
-*forkserver*), which depends on the platform.  We will use *spawn* as
-it is available on all platforms, you can read more about the others
-in the [Python
-documentation](https://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods).
-As creating a process is resource intensive, multiprocessing is
-beneficial under limited circumstances - namely, when the resource
-utilisation (or runtime) of a function is *measureably* larger than
-the overhead of creating a new process.
 
 :::callout
 ## Protect process creation with an `if`-block
