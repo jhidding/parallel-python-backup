@@ -10,6 +10,7 @@ exercises: 30
 :::
 
 :::objectives
+- Understand the basics of computer architecture.
 - Understand the GIL.
 - Understand the difference between the python `threading` and `multiprocessing` library
 :::
@@ -26,6 +27,22 @@ exercises: 30
 
 ### Simple multi-core cpu architecture
 ![multicore](fig/simple_multicore.png)
+
+:::challenge
+## Challenge: How many logical cores (CPU cores) is located on the machine that you are running on?
+
+Use the simple linux command `lscpu` to inspect the specifications of the compute architecture that you are running on. 
+
+To make things a bit more complicated.... Because this class is taught on shared resources, how many cores are actually allocated to this specific notebook instance that you are running on? HINT: use the linux tool `numactl` (specifically `numactl --show`).
+
+:::solution
+## Solution
+```
+!lscpu
+```
+```
+!numactl --show
+```
 
 
 
