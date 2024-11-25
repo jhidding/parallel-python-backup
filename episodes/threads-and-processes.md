@@ -210,7 +210,7 @@ p2.join()
 :::
 
 
-# Concurrent Futures (easy colution for Threads/Processes)
+# Concurrent Futures (easy solution for Threads/Processes)
 Now that we have introduced the concepts of **Threads** and **Processes** in Python. Lets step back and use the [concurrent.futures](https://docs.python.org/3/library/concurrent.futures.html) module. This module provides interfaces for running tasks using pools of thread or process workers. The APIs are the same, so applications can switch between threads and processes with minimal changes.
 
 The module provides two types of classes for interacting with the pools.
@@ -285,6 +285,7 @@ if __name__ == "__main__":
 ```python
 import time
 import random
+import numpy as np  
 from concurrent import futures
 
 def calc_pi_map(N):
