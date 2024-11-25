@@ -17,7 +17,7 @@ exercises: 30
 
 # A bit of computer architecture
 ### The von Neumann architecture
-![Neumann](fig/von_neumann.png)
+![Neumann](fig/von_neumann.png){alt="diagram with arrows"}
 
 - A processing unit with both an arithmetic logic unit and processor registers
 - A control unit that includes an instruction register and a program counter
@@ -26,12 +26,12 @@ exercises: 30
 - Input and output mechanisms
 
 ### Simple multi-core cpu architecture
-![multicore](fig/simple_multicore.png)
+![multicore](fig/simple_multicore.png){alt="diagram transition from cpu, multicore to gpu"}
 
 :::challenge
 ## Challenge: How many logical cores (CPU cores) is located on the machine that you are running on?
 
-Use the simple linux command `lscpu` to inspect the specifications of the compute architecture that you are running on. 
+Use the simple linux command `lscpu` to inspect the specifications of the compute architecture that you are running on.
 
 To make things a bit more complicated.... Because this class is taught on shared resources, how many cores are actually allocated to this specific notebook instance that you are running on? HINT: use the linux tool `numactl` (specifically `numactl --show`).
 
@@ -48,10 +48,10 @@ To make things a bit more complicated.... Because this class is taught on shared
 
 # The Python Interpreter
 
-![interpreter](fig/Python_interpreter.png)
+![interpreter](fig/Python_interpreter.png){alt="schematic of python interpetrer"}
 
-- Python source code is compiled into bytecode, the internal representation of a Python program in the interpreter. 
-- The bytecode is also cached in .pyc and .pyo files so that executing the same file is faster the second time (recompilation from source to bytecode can be avoided). 
+- Python source code is compiled into bytecode, the internal representation of a Python program in the interpreter.
+- The bytecode is also cached in .pyc and .pyo files so that executing the same file is faster the second time (recompilation from source to bytecode can be avoided).
 - This “intermediate language” is said to run on a virtual machine that executes the machine code corresponding to each bytecode.
 
 
@@ -59,7 +59,7 @@ To make things a bit more complicated.... Because this class is taught on shared
 
 The Global Interpreter Lock (GIL) is an infamous feature of the Python interpreter. In CPython, theGIL, is a mutex that protects access to Python objects, preventing multiple threads from executing Python bytecodes at once. The GIL prevents race conditions and ensures thread safety, making programming in Python safer, and prevents us from using multiple cores from a single Python instance.
 
-![GIL](fig/GIL.png)
+![GIL](fig/GIL.png){alt="sequence diagram of python threads"}
 
 When we want to perform parallel computations, this becomes an obvious problem.
 There are roughly two classes of solutions to circumvent/lift the GIL:
@@ -72,12 +72,12 @@ There are roughly two classes of solutions to circumvent/lift the GIL:
 
 There are two basic implementations of parallelism in the Python Standard Library. Parallelism implemented namely via "threads" or "processes"
 
-![clusterthreadsprocess](fig/cluster_python.png)
+![clusterthreadsprocess](fig/cluster_python.png){alt="parallelism in python"}
 
 
 
 ## Thread example (via threading)
-![threading](fig/cluster_threading.png)
+![threading](fig/cluster_threading.png){alt="diagram of forms of parallism"}
 The [threading](https://docs.python.org/3/library/threading.html) module - includes a high-level, object oriented, API for working with concurrency from Python. **Thread objects run concurrently within the same process and share memory with other thread objects**. Using threads is an easy way to scale for tasks that are more I/O bound than CPU bound. The python threading module is used to manage the execution of threads within a process. It allows a program to run multiple operations concurrently in the same process space.
 
 ```python
@@ -112,14 +112,14 @@ t2.join()
 - The `.start()` method Starts the thread’s activity.
     - It must be called at most once per thread object. It arranges for the object’s run() method to be invoked in a separate thread of control.
     - This method will raise a RuntimeError if called more than once on the same thread object.
-- The `.join()` method waits until the thread terminates. 
+- The `.join()` method waits until the thread terminates.
     - This blocks the calling thread until the thread whose join() method is called terminates – either normally or through an unhandled exception – or until the optional timeout occurs.
 
 
 :::challenge
 ### Basic Exercises: Try to use the simple functionality of the threading module.
 
-1. Write a simple multi-threaded program that prints out the process id, thread id, and thread names. Usefull methods to use `threading.current_thread().name` and `threading.current_thread().native_id`. 
+1. Write a simple multi-threaded program that prints out the process id, thread id, and thread names. Usefull methods to use `threading.current_thread().name` and `threading.current_thread().native_id`.
 2. Enumerating over all active threads. Usefull method `threading.enumerate()`. Question, How many active threads are behind the Jupyter Notebook?
 
 ::::solution
@@ -131,7 +131,7 @@ import time
 def worker(worker_id):
     """worker function"""
     time.sleep(worker_id)
-    
+
     print("Thread name:",threading.current_thread().name)
     print("Thread id:",threading.current_thread().native_id)
     print('Worker:',worker_id)
@@ -142,7 +142,7 @@ def worker(worker_id):
 
     print("\n")
     print("\n")
-    
+
 t1 = threading.Thread(target=worker, args=[1])
 t2 = threading.Thread(target=worker, args=[3])
 
@@ -158,8 +158,8 @@ t2.join()
 
 ## Process example (via multiprocessing)
 
-![multiprocessing](fig/cluster_processes.png)
-The [multiprocessing](https://docs.python.org/3/library/multiprocessing.html) - module mirrors threading, except that instead of a Thread class it provides a Process. Each Process is a true system process without shared memory, but multiprocessing provides features for sharing data and passing messages between them so that in many cases converting from threads to processes is as simple as changing a few import statements. 
+![multiprocessing](fig/cluster_processes.png){alt="diagram with coloured boxes"}
+The [multiprocessing](https://docs.python.org/3/library/multiprocessing.html) - module mirrors threading, except that instead of a Thread class it provides a Process. Each Process is a true system process without shared memory, but multiprocessing provides features for sharing data and passing messages between them so that in many cases converting from threads to processes is as simple as changing a few import statements.
 
 Multiprocessing is a package that supports spawning processes using an API similar to the threading module. The multiprocessing package offers both local and remote concurrency, effectively side-stepping the Global Interpreter Lock by using subprocesses instead of threads. Due to this, the multiprocessing module allows the programmer to fully leverage multiple processors on a given machine. It runs on both Unix and Windows.
 
@@ -186,7 +186,7 @@ import time
 def worker(worker_id):
     """worker function"""
     time.sleep(worker_id)
-    
+
     print("Thread name:",threading.current_thread().name)
     print("Thread id:",threading.current_thread().native_id)
     print('Worker:',worker_id)
@@ -195,7 +195,7 @@ def worker(worker_id):
     print("The number of active threads is:", len(threading.enumerate()))
     print("And they are:",threading.enumerate())
 
-    
+
 p1 = multiprocessing.Process(target=worker, args=[1])
 p2 = multiprocessing.Process(target=worker, args=[2])
 
@@ -215,7 +215,7 @@ Now that we have introduced the concepts of **Threads** and **Processes** in Pyt
 
 The module provides two types of classes for interacting with the pools.
 
-- **Executors** are used for managing pools of workers. 
+- **Executors** are used for managing pools of workers.
 - **Futures** are used for managing results computed by the workers.
 
 To use a pool of workers, an application creates an instance of the appropriate executor class and then submits tasks for it to run. When each task is started, a Future instance is returned.
@@ -234,6 +234,7 @@ ex = futures.ThreadPoolExecutor(max_workers=len(tasks))
 
 results = ex.map(some_worker_func, tasks)
 ```
+
 :::challenge
 ## Exercise: adapt the original exercise to submit tasks to a pool
 - Try launching a pool of threads vs processes
@@ -248,16 +249,16 @@ import time
 def worker(worker_id):
     """worker function"""
     time.sleep(worker_id)
-    
+
     print("Worker:", worker_id)
     print("PID:",os.getpid())
     print("Thread name:",threading.current_thread().name)
     print("Thread id:",threading.current_thread().native_id)
-    
+
     print("The number of active threads is:", len(threading.enumerate()))
     print("And they are:",threading.enumerate())
 
-    
+
 tasks = range(1,5)
 ex = futures.ThreadPoolExecutor(max_workers=len(tasks))
 results = ex.map(worker, tasks)
@@ -285,7 +286,7 @@ if __name__ == "__main__":
 ```python
 import time
 import random
-import numpy as np  
+import numpy as np
 from concurrent import futures
 
 def calc_pi_map(N):
@@ -306,7 +307,7 @@ num_workers = 2
 p_start = time.time()
 
 ex = futures.ThreadPoolExecutor(max_workers=num_workers)
-# or 
+# or
 # ex = futures.ProcessPoolExecutor(max_workers=num_workers)
 results = ex.map(calc_pi_map, [resolution for x in range(num_workers)])
 final_results = list(results)
@@ -316,6 +317,8 @@ p_end = time.time()
 print("Resultion:", np.mean(final_results)/resolution - np.pi)
 print("Execution:", p_end - p_start)
 ```
+::::
+:::
 
 :::discussion
 ### Discussion: where's the speed-up threads vs processes?
@@ -343,4 +346,3 @@ To write your own routines that do not live under the GIL there are several opti
 - If your code releases the GIL, threading will be more efficient than multiprocessing.
 - If your code does not release the GIL, some of your code is still in Python, and you're wasting precious compute time!
 :::
-

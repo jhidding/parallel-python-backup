@@ -32,7 +32,7 @@ A lot of the functionalities in Dask are based on an important concept known as 
 
 `dask.delayed` changes the strategy by which our computation is evaluated. Normally, you expect that a computer runs commands when you ask for them, and that you can give the next command when the current job is complete. With delayed evaluation we do not wait before formulating the next command. Instead, we create the dependency graph of our complete computation without actually doing any work. Once we build the full dependency graph, we can see which jobs can be done in parallel and have those scheduled to different workers.
 
-To express a computation in this world, we need to handle future objects *as if they're already there*. These objects may be referred to as either *futures* or *promises*. 
+To express a computation in this world, we need to handle future objects *as if they're already there*. These objects may be referred to as either *futures* or *promises*.
 
 :::callout
 Several Python libraries provide slightly different support for working with futures. The main difference between Python futures and Dask-delayed objects is that futures are added to a queue at the point of definition, while delayed objects are silent until you ask to compute. We will refer to such 'live' futures as futures proper, and to 'dead' futures (including the delayed) as **promises**.
@@ -205,8 +205,7 @@ x_p = gather(*(delayed(add)(n, n) for n in range(10))) # Shorthand for gather(ad
 x_p.visualize()
 ~~~
 
-![a gather pattern](fig/dask-gather-example.svg)
-{.output alt="boxes and arrows"}
+![a gather pattern](fig/dask-gather-example.svg){.output alt="boxes and arrows"}
 
 Computing the result
 
@@ -259,7 +258,7 @@ pi_p.compute()
 ::::
 :::
 
-You may not see a significant speed-up. This is because `dask delayed` uses threads by default, and our native Python implementation of `calc_pi` does not circumvent the GIL. You should see a more significant speed-up with the Numba version of `calc_pi`, for example.  
+You may not see a significant speed-up. This is because `dask delayed` uses threads by default, and our native Python implementation of `calc_pi` does not circumvent the GIL. You should see a more significant speed-up with the Numba version of `calc_pi`, for example.
 
 In practice, you may not need to use `@delayed` functions frequently, but they do offer ultimate flexibility. You can build complex computational workflows in this manner, sometimes replacing shell scripting, make files, and suchlike.
 
