@@ -77,7 +77,9 @@ There are two basic implementations of parallelism in the Python Standard Librar
 
 
 ## Thread example (via threading)
+
 ![threading](fig/cluster_threading.png){alt="diagram of forms of parallism"}
+
 The [threading](https://docs.python.org/3/library/threading.html) module - includes a high-level, object oriented, API for working with concurrency from Python. **Thread objects run concurrently within the same process and share memory with other thread objects**. Using threads is an easy way to scale for tasks that are more I/O bound than CPU bound. The python threading module is used to manage the execution of threads within a process. It allows a program to run multiple operations concurrently in the same process space.
 
 ```python
@@ -159,6 +161,7 @@ t2.join()
 ## Process example (via multiprocessing)
 
 ![multiprocessing](fig/cluster_processes.png){alt="diagram with coloured boxes"}
+
 The [multiprocessing](https://docs.python.org/3/library/multiprocessing.html) - module mirrors threading, except that instead of a Thread class it provides a Process. Each Process is a true system process without shared memory, but multiprocessing provides features for sharing data and passing messages between them so that in many cases converting from threads to processes is as simple as changing a few import statements.
 
 Multiprocessing is a package that supports spawning processes using an API similar to the threading module. The multiprocessing package offers both local and remote concurrency, effectively side-stepping the Global Interpreter Lock by using subprocesses instead of threads. Due to this, the multiprocessing module allows the programmer to fully leverage multiple processors on a given machine. It runs on both Unix and Windows.

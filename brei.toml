@@ -1,0 +1,25 @@
+include = ["docs/weave.toml", "docs/weave_html.json"]
+
+[[task]]
+description = "Scan for input Markdown files and generate contents"
+force = true
+creates = ["docs/weave_html.json", "docs/contents.md"]
+runner = "python"
+path = "docs/gencontents.py"
+
+[environment]
+title = "Parallel Programming in Python"
+subtitle = "lesson material"
+
+[[call]]
+template = "copy"
+collect = "static"
+[call.args]
+srcdir = "docs/template"
+tgtdir = "docs/site"
+basename = ["dark.css"]
+
+[[task]]
+name = "weave"
+description = "Deploy site"
+requires = ["#html", "#static"]

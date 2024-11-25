@@ -59,15 +59,15 @@ contact: 'j.hidding@esciencecenter.nl'
 
 # Order of episodes in your lesson
 episodes:
-- introduction.md
-- benchmarking.md
-- computing-pi.md
-- threads-and-processes.md
-- delayed-evaluation.md
-- map-and-reduce.md
-- exercise-with-fractals.md
-- extra-asyncio.md
-- extra-external-c.md
+- 02-introduction.md
+- 03-benchmarking.md
+- 04-computing-pi.md
+- 05-threads-and-processes.md
+- 06-delayed-evaluation.md
+- 07-map-and-reduce.md
+- 08-exercise-with-fractals.md
+- 09-extra-asyncio.md
+- 10-extra-external-c.md
 
 # Information for Learners
 learners:
@@ -82,5 +82,3 @@ profiles:
 #
 # This space below is where custom yaml items (e.g. pinning
 # sandpaper and varnish versions) should live
-
-
