@@ -36,7 +36,6 @@ Use the simple linux command `lscpu` to inspect the specifications of the comput
 To make things a bit more complicated.... Because this class is taught on shared resources, how many cores are actually allocated to this specific notebook instance that you are running on? HINT: use the linux tool `numactl` (specifically `numactl --show`).
 
 ::::solution
-## Solution
 ```
 !lscpu
 ```

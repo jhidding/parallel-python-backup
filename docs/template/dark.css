@@ -434,6 +434,12 @@ div.sourceCode {
     background: hsl(20deg 50% 50%);
 }
 
+pre.output {
+    background: var(--code-block-bg);
+    color: lime;
+    padding: 5pt 5pt 5pt 5pt;
+}
+
 /* === Equations =================================== */
 span.equation {
     display: block;
