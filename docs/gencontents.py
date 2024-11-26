@@ -12,7 +12,7 @@ def write_weave_html(files, imgs):
             "args": { "basename": [p.stem for p in files] }
         },
         {   "template": "copy",
-            "collect": "static",
+            "collect": "figures",
             "args": { "srcdir": "episodes/fig", "tgtdir": "docs/site/fig",
                 "basename": [i.name for i in imgs] } }
     ]}
