@@ -22,4 +22,4 @@ basename = ["dark.css"]
 [[task]]
 name = "weave"
 description = "Deploy site"
-requires = ["#html", "#static"]
+requires = ["#html", "#static", "#figures"]
